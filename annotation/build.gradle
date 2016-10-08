@@ -1,0 +1,63 @@
+apply plugin: 'java'
+apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: "com.jfrog.bintray"
+
+sourceCompatibility = JavaVersion.VERSION_1_7
+targetCompatibility = JavaVersion.VERSION_1_7
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+}
+def siteUrl = 'http://git.mcloudlife.com:8000/android/annotation'
+def gitUrl = 'http://git.mcloudlife.com:8000/android/annotation.git'
+version = "1.0"
+group = "com.medzone.permission.annotation"
+install {
+    repositories.mavenInstaller {
+        pom {
+            project {
+                packaging 'aar'
+                name 'component'
+                url siteUrl
+                licenses {
+                    license {
+                        name 'The Apache Software License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id 'lin'
+                        name 'lintao'
+                        email 'lintao@medzone-biotech.com'
+                    }
+                }
+                scm {
+                    connection gitUrl
+                    developerConnection gitUrl
+                    url siteUrl
+                }
+            }
+        }
+    }
+}
+task sourcesJar(type: Jar) {
+    from "classes/main"
+    classifier = 'sources'
+}
+artifacts {
+    archives sourcesJar
+}
+bintray {
+    user = 'mcloud'
+    key = '4327f866efed4ed2ee3aabc483a163d928126b9f'
+    configurations = ['archives']
+    pkg {
+        repo = "maven"
+        name = "annotation"
+        websiteUrl = siteUrl
+        vcsUrl = gitUrl
+        licenses = ["Apache-2.0"]
+        publish = true
+    }
+}
+

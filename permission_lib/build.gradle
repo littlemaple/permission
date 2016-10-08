@@ -1,0 +1,90 @@
+apply plugin: 'com.android.library'
+apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: "com.jfrog.bintray"
+
+android {
+    compileSdkVersion 24
+    buildToolsVersion "24.0.2"
+
+    defaultConfig {
+        minSdkVersion 14
+        targetSdkVersion 24
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile 'com.android.support:appcompat-v7:24.2.1'
+    compile 'com.medzone.permission.annotation:annotation:1.0'
+}
+
+def siteUrl = 'http://git.mcloudlife.com:8000/android/permission_lib'
+def gitUrl = 'http://git.mcloudlife.com:8000/android/permission_lib.git'
+version = "1.0"
+group = "com.medzone.permission_lib"
+install {
+    repositories.mavenInstaller {
+        pom {
+            project {
+                packaging 'aar'
+                name 'permission_lib'
+                url siteUrl
+                licenses {
+                    license {
+                        name 'The Apache Software License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id 'lin'
+                        name 'lintao'
+                        email 'lintao@medzone-biotech.com'
+                    }
+                }
+                scm {
+                    connection gitUrl
+                    developerConnection gitUrl
+                    url siteUrl
+                }
+            }
+        }
+    }
+}
+
+task sourcesAar(type:Copy){
+    from 'build/outputs/aar/permission_lib'
+    into 'build/outputs/libs/'
+    rename{
+        String filename->filename.replace('_lib-release','')
+    }
+}
+
+def sourceJar = file('build/outputs/aar/permission_lib-release.aar')
+
+artifacts {
+//    archives sourceJar
+}
+
+bintray {
+    user = 'mcloud'
+    key = '4327f866efed4ed2ee3aabc483a163d928126b9f'
+    configurations = ['archives']
+    pkg {
+        repo = "maven"
+        name = "permission_lib"
+        websiteUrl = siteUrl
+        vcsUrl = gitUrl
+        licenses = ["Apache-2.0"]
+        publish = true
+    }
+}
+
+

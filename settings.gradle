@@ -1,0 +1,1 @@
+include ':app', ':compile', ':annotation', ':permission_lib'
